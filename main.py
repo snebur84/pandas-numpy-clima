@@ -1,6 +1,7 @@
 import sys
 from cliente_api import criar_sessao, obter_coordenadas, obter_dados_climaticos
 import processamento as proc
+import analises_avancadas as adv
 
 
 def executar(cidade: str):
@@ -51,6 +52,29 @@ def executar(cidade: str):
     # Direção do vento: U > 0 Oeste -> Leste, U < 0 Leste -> Oeste; V > 0 Sul -> Norte, V < 0 Norte -> Sul
     print(f"Vento (U/V):        U={ultima_linha['vento_u']:.1f}, V={ultima_linha['vento_v']:.1f}")
     print(f"Classificação:      {ultima_linha['categoria_clima']}")
+
+    # --- EXIBIÇÃO DE ANALISES AVANÇADAS --- #
+    print('# --- EXIBIÇÃO DE ANALISES AVANÇADAS --- #')
+    # Exemplo 1: Matriz de Correlação
+    matriz_corr = adv.calcular_matriz_correlacao(df_horario)
+    print("\n=== MATRIZ DE CORRELAÇÃO (PANDAS) ===")
+    print(matriz_corr)
+
+    # Exemplo 2: Tendência de Temperatura
+    tendencia = adv.calcular_tendencia_linear(df_horario, coluna="temp")
+    print(
+        f"\nTendência Térmica: {tendencia['tendencia']} ({tendencia['taxa_variacao_por_hora']:.3f} °C/hora)"
+    )
+
+    # Exemplo 3: Anomalias de Vento
+    anomalias_vento = adv.detectar_anomalias_zscore(
+        df_horario, coluna="vento_vel", limiar=2.5
+    )
+    print(f"\nRegistros com rajadas atípicas (Z-Score > 2.5): {len(anomalias_vento)}\n")
+
+    # Exemplo 4: Picos diários
+    picos = adv.analisar_picos_por_horario(df_horario)
+    print(picos)
 
 
 if __name__ == "__main__":
