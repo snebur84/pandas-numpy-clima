@@ -2,6 +2,7 @@ import sys
 from cliente_api import criar_sessao, obter_coordenadas, obter_dados_climaticos
 import processamento as proc
 import analises_avancadas as adv
+import graficos as gr
 
 
 def executar(cidade: str):
@@ -75,6 +76,7 @@ def executar(cidade: str):
     # Exemplo 4: Picos diários
     picos = adv.analisar_picos_por_horario(df_horario)
     print(picos)
+    gr.cria_grafico(df_horario)
 
 
 if __name__ == "__main__":
